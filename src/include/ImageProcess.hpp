@@ -1,5 +1,7 @@
 #pragma once
 
+#include <opencv2/opencv.hpp>
+
 namespace CrowXR {
     void crop(unsigned char* pSrcBitmap, unsigned char* pDstBitmap, int input_width, int input_height, int roi_x, int roi_y, int roi_width, int roi_height);
     void rescale(unsigned char* pSrcBitmap, unsigned char* pDstBitmap, int input_width, int input_height, int output_width, int output_height);

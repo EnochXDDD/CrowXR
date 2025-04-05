@@ -1,14 +1,32 @@
-#include <opencv2/opencv.hpp>
-
 #include "ImageProcess.h"
 #include "ImageProcess.hpp"
 
 #ifdef ANDROID
 
-IMAGE_PROCESS_API jstring Java_com_crowxr_app_MainActivity_stringFromJNI(JNIEnv* env, jobject)
-{
-    auto hello = std::string("Hello from C++");
-    return env->NewStringUTF(hello.c_str());
+IMAGE_PROCESS_API void Java_com_crowxr_app_MainActivity_crop(JNIEnv* env, jobject, jbyteArray srcBitmap, jbyteArray dstBitmap, jint input_width, jint input_height, jint roi_x, jint roi_y, jint roi_width, jint roi_height) {
+    auto pSrcBitmap = env->GetByteArrayElements(srcBitmap, nullptr);
+    auto pDstBitmap = env->GetByteArrayElements(dstBitmap, nullptr);
+    CrowXR::crop(reinterpret_cast<unsigned char*>(pSrcBitmap), reinterpret_cast<unsigned char*>(pDstBitmap), input_width, input_height, roi_x, roi_y, roi_width, roi_height);
+    env->ReleaseByteArrayElements(srcBitmap, reinterpret_cast<jbyte*>(pSrcBitmap), 0);
+    env->ReleaseByteArrayElements(dstBitmap, reinterpret_cast<jbyte*>(pDstBitmap), 0);
+}
+
+IMAGE_PROCESS_API void Java_com_crowxr_app_MainActivity_rescale(JNIEnv* env, jobject, jbyteArray srcBitmap, jbyteArray dstBitmap, jint input_width, jint input_height, jint output_width, jint output_height) {
+    auto pSrcBitmap = env->GetByteArrayElements(srcBitmap, nullptr);
+    auto pDstBitmap = env->GetByteArrayElements(dstBitmap, nullptr);
+    CrowXR::rescale(reinterpret_cast<unsigned char*>(pSrcBitmap), reinterpret_cast<unsigned char*>(pDstBitmap), input_width, input_height, output_width, output_height);
+    env->ReleaseByteArrayElements(srcBitmap, reinterpret_cast<jbyte*>(pSrcBitmap), 0);
+    env->ReleaseByteArrayElements(dstBitmap, reinterpret_cast<jbyte*>(pDstBitmap), 0);
+}
+
+IMAGE_PROCESS_API void Java_com_crowxr_app_MainActivity_hconcate(JNIEnv* env, jobject, jbyteArray srcBitmapL, jbyteArray srcBitmapR, jbyteArray dstBitmap, jint left_width, jint right_width, jint input_height) {
+    auto pSrcBitmapL = env->GetByteArrayElements(srcBitmapL, nullptr);
+    auto pSrcBitmapR = env->GetByteArrayElements(srcBitmapR, nullptr);
+    auto pDstBitmap = env->GetByteArrayElements(dstBitmap, nullptr);
+    CrowXR::hconcate(reinterpret_cast<unsigned char*>(pSrcBitmapL), reinterpret_cast<unsigned char*>(pSrcBitmapR), reinterpret_cast<unsigned char*>(pDstBitmap), left_width, right_width, input_height);
+    env->ReleaseByteArrayElements(srcBitmapL, reinterpret_cast<jbyte*>(pSrcBitmapL), 0);
+    env->ReleaseByteArrayElements(srcBitmapR, reinterpret_cast<jbyte*>(pSrcBitmapR), 0);
+    env->ReleaseByteArrayElements(dstBitmap, reinterpret_cast<jbyte*>(pDstBitmap), 0);
 }
 
 #else
